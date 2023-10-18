@@ -1,0 +1,70 @@
+{% extends "../base/base.html" %}
+{% load static %}
+
+{% block title %} Home - All Users {% endblock %}
+
+
+{% block otherstyle %}
+
+<link rel="stylesheet" href="{% static 'css/traders/home.css' %}">
+
+<script type="text/JavaScript"  src = "{% static 'js/home.js' %}" ></script>
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="panel-list">
+    
+    <h1>All Users</h1>
+    <div class="row row-content">
+        
+        
+
+        <div class="table-responsive-sm col-12">
+            {% if user_profiles|length > 0 %}
+            <table class="table table-sm table-panel table-desktop">
+                <thead>
+                <tr>
+                    <th scope="col th-sm">#</th>
+                    <th scope="col th-sm">User Name</th>
+                    <th scope="col th-sm">Total Transactions</th>
+                    <th scope="col th-sm">Date Joined</th>
+                    {% if current_user.is_superuser %}
+                        <th scope="col th-sm">Balance</th>
+                    {% endif %}
+                </tr>
+                </thead> 
+                <tbody>
+                {% for user in user_profiles %}
+                    <tr class='clickable-row' jkjk = '890' 
+
+                    custom_url = "{% url 'chart' trader_id=user.id %}"
+                    
+                     >
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ user.email |title }}</td>
+                        <td>{{ user.transactions.count}}</td>
+                        <td>{{ user.date_joined|date:'Y/m/d' }}</td>
+                        {% if current_user.is_superuser %}
+                        
+                            <td>${{ user.balance}}</td>
+
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+            <div class="text-center empty-table" style="display: block;">No Users to display</div>
+            {% endif %}
+        </div>
+        <div>
+
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

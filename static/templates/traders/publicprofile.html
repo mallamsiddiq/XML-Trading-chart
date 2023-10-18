@@ -1,0 +1,72 @@
+{% extends "../base/base.html" %}
+{% load static %}
+
+
+
+{% block title %} Traders Stats {% endblock %}
+
+{% block otherstyle %}
+
+<!-- <link rel="stylesheet" href='/static/css/companystats.css' /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/traders/dateform.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<div class = "dateform" id = "dateform">
+
+    <form method="get">
+        <div> Filter By Date</div>
+        {% comment %} {% csrf_token %} {% endcomment %}
+        
+
+        <div class = "fields-box">
+        
+            {{ dateform.as_p }}
+        
+        </div>
+
+        {% comment %} <button type="submit">Apply Filters</button> {% endcomment %}
+        
+    </form>
+</div>
+
+ <div class="main-box" id = 'mainbox'  >
+
+    <div class="plots-box">
+        <h2>{{trader|default:user|title}}'s Dashboard - Mixed Chart (Profit/Loss vs. Time)</h2>
+        <div><canvas id="mixedChart" style="width:100%;max-width:12300px"></canvas></div>
+    </div>
+    
+ </div>
+ 
+{% endblock %}
+
+{% block otherscripts %}
+<script>
+    let labels = JSON.parse('{{ data_labels|escapejs|safe }}');  
+    // Ensure |safe filter is used to prevent escaping
+
+    
+    labels = labels.map(function (timestamp) {
+        return new Date(timestamp);
+
+        var date = new Date(timestamp);
+    
+    // Format the Date object using Moment.js
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    });
+    console.log(labels)
+    // prev_balance
+
+    //var labels = JSON.parse(JSON.stringify({{ data_labels|safe }}));
+    var profits_losses = {{ data_values|safe }};
+    var barData = ({{bar_data|safe }});
+    
+    var PrevBalance = ({{prev_balance|safe }});
+    console.log(PrevBalance)
+</script>
+
+<script type="text/JavaScript"  src = "{% static 'js/plotchart.js' %}" ></script>
+
+{% endblock %}

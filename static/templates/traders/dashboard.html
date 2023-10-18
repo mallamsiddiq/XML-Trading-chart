@@ -1,0 +1,12 @@
+<!-- userdashboard/templates/userdashboard/dashboard.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <div>
+    {% with app = 'user-dashboard' %}
+      {% load plotly_dash %}
+
+      {% plotly_app app %}
+    {% endwith %}
+  </div>
+{% endblock %}

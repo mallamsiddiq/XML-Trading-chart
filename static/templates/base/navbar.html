@@ -1,0 +1,54 @@
+{% load static %}
+
+<div class="navbar navbar-expand-custom navbar-mainbg" id = "mainbar">
+    <a class="navbar-brand navbar-logo" href="{% url 'home' %}">
+        <img class="logo-avater" src="https://ft9ja.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.abe0464e.png&w=640&q=75" alt="">
+        </a>
+    <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars text-white"></i>
+
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-tachometer-alt"></i>Home</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" 
+                href="{% url 'dashboard' %}"
+                href = '/dashboard'>
+                <i class="far fa-clone"></i>Dashboard</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0);"><i class="far fa-chart-bar"></i>Charts</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);">
+                    <i class="far fa-copy"></i>
+                    {{user.email}}
+                </a>
+                <li class="nav-item logoutli" >
+                    <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="far fa-copy"></i>Log Out</a>
+                </li>
+            {% else %}
+            <li class="nav-item loginli" >
+                <a class="nav-link" href="{% url 'login' %}">
+                <i class="far fa-copy"></i>LogIn</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+
+{% block otherscripts %}
+
+<script type="text/JavaScript"  src = "{% static 'js/nav.js' %}" ></script>
+<!-- src ="../../js/plotchart.js" -->
+
+{% endblock %}

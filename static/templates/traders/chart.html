@@ -1,0 +1,11 @@
+{% extends 'traders/base.html' %}
+
+{% block content %}
+    <form method="GET" ></form>
+        {{ form.as_p }}
+
+        <button>Submit</button>
+    </form>
+    
+    {{ chart|safe }}
+{% endblock content %}
