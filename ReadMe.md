@@ -1,10 +1,10 @@
 # HeY!! [PlEaSe ReAdMe]
 
 
-## Project Objective:
+## 🚀 Project Objective:
 Our primary goal with this project is to develop a web-based dashboard application that caters to the needs of a startup in the finance sector. This startup has generously provided 10 stock traders with an initial capital of $100 each. Our project's central mission is to create a user-friendly platform that empowers both the traders and administrators to comprehensively monitor trading performance over time.
 
-## User Interaction and Navigation:
+## 📊 User Interaction and Navigation:
 
 1. **Homepage (`/home/`):**
    - Traders and administrators can access the homepage to obtain an overview of all the traders.
@@ -19,7 +19,7 @@ Our primary goal with this project is to develop a web-based dashboard applicati
 4. **Non-Admin Dashboard:**
    - For traders who are not administrators, a dedicated dashboard is readily available. This can be reached by simply clicking on 'dashboard' in the navigation bar, providing a seamless user experience.
 
-## User Dashboard Features:
+## 📈 User Dashboard Features:
 
 1. **Date Filtering:**
    - To enhance the analytical capabilities of traders, we've introduced a date filtering option. This empowers users to focus on specific time intervals and gain deeper insights into their trading history.
@@ -27,7 +27,7 @@ Our primary goal with this project is to develop a web-based dashboard applicati
 2. **Mixed Graph:**
    - Our dashboard employs a mixed graph representation that combines bars and lines. This dynamic visual approach effectively showcases a trader's trading journey and their transaction growth.
 
-## Data Seeding and Initialization:
+## 🌱Data Seeding and Initialization:
 
 1. **Docker Setup:**
    - To ensure the accessibility and ease of running the application, we've implemented Docker containers. To get started, one can execute the following command: `docker-compose up --build`. This simple step allows the application to be accessed at `http://localhost:8000/`.
@@ -46,12 +46,12 @@ Our primary goal with this project is to develop a web-based dashboard applicati
        - `docker-compose exec web python manage.py simulate_profit_loss`
    - It's important to note that these commands may take some time to complete due to the inclusion of delays in the `seed_traders` script, allowing us to simulate real-world scenarios.
 
-## Code Structure:
+## 🧰Code Structure:
 
 - Our project maintains a structured and organized codebase with comprehensive test coverage. All tests are stored in the `test` folder, ensuring that edge cases are well-covered.
 - The `utils` folder contains utility scripts that are crucial to the application's functionality.
 
-## How It Works:
+## ⚙️ How It Works:
 
 1. **Data Capture:**
    - The heart of our application is the `Transaction` model, responsible for capturing critical details of financial transactions. These details encompass the type of transaction, the associated trader, transaction date, description, amount, and balance.
