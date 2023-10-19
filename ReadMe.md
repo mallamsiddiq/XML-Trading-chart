@@ -19,6 +19,13 @@ Our primary goal with this project is to develop a web-based dashboard applicati
 4. **Non-Admin Dashboard:**
    - For traders who are not administrators, a dedicated dashboard is readily available. This can be reached by simply clicking on 'dashboard' in the navigation bar, providing a seamless user experience.
 
+5. **Loging in**
+   - All users automatically created have same password which is : 'password' i.e one user is email=trader1@gmail.com, password = 'password',
+
+   - And an admin usewr is automatically created i.e (email = 'admin@ftnja.com', password = 'admin')
+   please note: username has been replaced with email throughout this app
+   
+
 ## 📈 User Dashboard Features:
 
 1. **Date Filtering:**
