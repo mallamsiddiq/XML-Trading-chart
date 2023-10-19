@@ -41,6 +41,7 @@
                     <tr class='clickable-row' jkjk = '890' 
 
                     custom_url = "{% url 'chart' trader_id=user.id %}"
+                    {% comment %} {%if user.is%} {% endcomment %}
                     
                      >
                         <th scope="row">{{ forloop.counter }}</th>

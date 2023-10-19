@@ -17,6 +17,7 @@ testenv\
 testenv
 db.json
 .vscode\
+.vscode
 db.json
 spinup.py
 .coverage
