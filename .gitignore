@@ -18,7 +18,6 @@ testenv
 .vscode\
 .vscode
 **/*.db
-db.json
 spinup.py
 .coverage
 __pycache__/
