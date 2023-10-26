@@ -15,7 +15,6 @@ newenv\
 newenv
 testenv\
 testenv
-db.json
 .vscode\
 .vscode
 **/*.db
