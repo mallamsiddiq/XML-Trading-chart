@@ -19,4 +19,4 @@ ADD . /ft9ja/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# CMD gunicorn ft9ja.wsgi:application --bind 0.0.0.0:$PORT
+CMD gunicorn ft9ja.wsgi:application --bind 0.0.0.0:$PORT
