@@ -10,7 +10,6 @@
 
 <script type="text/JavaScript"  src = "{% static 'js/home.js' %}" ></script>
 
-
 {% endblock %}
 
 {% block content %}
@@ -31,26 +30,23 @@
                     <th scope="col th-sm">User Name</th>
                     <th scope="col th-sm">Total Transactions</th>
                     <th scope="col th-sm">Date Joined</th>
-                    {% if current_user.is_superuser %}
+                    {% if user.is_superuser %}
                         <th scope="col th-sm">Balance</th>
                     {% endif %}
                 </tr>
                 </thead> 
                 <tbody>
-                {% for user in user_profiles %}
-                    <tr class='clickable-row' jkjk = '890' 
-
-                    custom_url = "{% url 'chart' trader_id=user.id %}"
-                    {% comment %} {%if user.is%} {% endcomment %}
-                    
-                     >
+                {% for profile in user_profiles %}
+                    <tr class='clickable-row' jkjk='890' 
+                    data-custom-url="{% if user.is_authenticated and user.id == profile.id %}{% url 'dashboard' %}{% else %}{% url 'chart' trader_id=profile.id %}{% endif %}">
+    
                         <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ user.email |title }}</td>
-                        <td>{{ user.transactions.count}}</td>
-                        <td>{{ user.date_joined|date:'Y/m/d' }}</td>
-                        {% if current_user.is_superuser %}
+                        <td>{{ profile.email |title }}</td>
+                        <td>{{ profile.transactions.count}}</td>
+                        <td>{{ profile.date_joined|date:'Y/m/d' }}</td>
+                        {% if current_profile.is_superprofile %}
                         
-                            <td>${{ user.balance}}</td>
+                            <td>${{ profile.balance}}</td>
 
                         {% endif %}
                     </tr>

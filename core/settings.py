@@ -108,6 +108,22 @@ if config('MONGO_DB_CONFIG', default = None):
         }
     }
 
+if config('MONGODB_URL', default = None):
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'sampledb',
+            'ENFORCE_SCHEMA': False,
+            'CLIENT': {
+                'host': config('MONGODB_URL'),
+                'authMechanism': 'SCRAM-SHA-1',
+
+            }  
+        }
+    }
+    
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
