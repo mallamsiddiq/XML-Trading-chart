@@ -11,6 +11,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 
 """
+
 import os, sys
 from pathlib import Path
 
@@ -198,4 +199,5 @@ AUTH_USER_MODEL = 'authapp.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-django_heroku.settings(locals())
+if config('PRODUCTION', default = None):
+    django_heroku.settings(locals())

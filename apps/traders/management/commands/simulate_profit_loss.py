@@ -16,11 +16,15 @@ class Command(BaseCommand):
     help = 'Simulate profit and loss for traders'
 
     def add_arguments(self, parser):
-        # Define an optional command-line argument for num_minutes with a default value of 60
-        parser.add_argument('--num_minutes', type=int, default=60, help='Number of minutes for the simulation')
+        # Define an optional command-line argument for num_transactions with a default value of 60
+        parser.add_argument('--num_transactions', type=int, default=60, help='Number of minutes for the simulation')
+        
+        # Define an optional command-line argument for delay with a default value of 20 seconds
+        parser.add_argument('--delay', type=int, default=20, help='Number of minutes for the simulation')
 
     def handle(self, *args, **options):
-        num_minutes = options['num_minutes']
+        num_transactions = options['num_transactions']
+        delay = options['delay']
         # Initialize Django for database access
         # django.setup()
 
@@ -32,7 +36,7 @@ class Command(BaseCommand):
         transaction_amount = 15  # Maximum transaction amount range for each minute
 
         for trader in traders:
-            for minute in range(1, num_minutes + 1):
+            for minute in range(1, num_transactions + 1):
                 # Generate a random transaction amount within the range [-transaction_amount, transaction_amount]
                 transaction_amount = random.uniform(-transaction_amount, transaction_amount)
 
@@ -47,7 +51,7 @@ class Command(BaseCommand):
                 transaction.save()
                 self.stdout.write(self.style.MIGRATE_HEADING(f'{transaction.description}  ----->>>>{transaction.customer.balance}'))
 
-                time.sleep(25)
+                time.sleep(delay)
                 
 
             self.stdout.write(self.style.SUCCESS(f'Simulated profit/loss for trader {trader}'))

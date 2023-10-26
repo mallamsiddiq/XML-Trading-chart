@@ -2,6 +2,7 @@
 *.pyo
 app.db
 .env
+/staticfiles
 frontend/node_modules/
 frontend/public/
 frontend/src/

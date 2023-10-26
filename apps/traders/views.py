@@ -21,7 +21,7 @@ class AdminRequiredMixin(LoginRequiredMixin):
     def handle_no_permission(self):
         if bool(getattr(self.request.user, 'trader', False)):
             messages.info(self.request, "Only your Dashboard is accesible to you")
-            return redirect(reverse_lazy('dashboard'))
+            # return redirect(reverse_lazy('dashboard'))
 
         messages.info(self.request, "You can't view other's transactions")
         return redirect(reverse_lazy('home'))
