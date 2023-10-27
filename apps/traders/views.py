@@ -7,7 +7,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import JsonResponse
 from django.contrib import messages
 
-
 from authapp.models import Trader
 
 from .forms import DateForm
@@ -19,9 +18,9 @@ class AdminRequiredMixin(LoginRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
     
     def handle_no_permission(self):
-        if bool(getattr(self.request.user, 'trader', False)):
-            messages.info(self.request, "Only your Dashboard is accesible to you")
-            return redirect(reverse_lazy('dashboard'))
+        if not self.request.user.is_authenticated:
+            messages.info(self.request, "Please log in")
+            return super().handle_no_permission()
 
         messages.info(self.request, "You can't view other's transactions")
         return redirect(reverse_lazy('home'))

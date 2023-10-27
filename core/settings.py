@@ -11,10 +11,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 
 """
+
 import os, sys
 from pathlib import Path
 
 from decouple import config, Csv
+import django_heroku
+
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +35,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 
 # Application definition
@@ -108,6 +112,26 @@ if config('MONGO_DB_CONFIG', default = None):
         }
     }
 
+if config('MONGODB_URL', default = None):
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'sampledb',
+            'ENFORCE_SCHEMA': False,
+            'CLIENT': {
+                'host': config('MONGODB_URL'),
+                'authMechanism': 'SCRAM-SHA-1',
+
+            }  
+        }
+    }
+
+DATABASE_URL = config('DATABASE_URL', default = None)
+
+db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age = 500, ssl_require=True)
+DATABASES['default'].update(db_from_env)   
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -175,4 +199,5 @@ AUTH_USER_MODEL = 'authapp.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+if config('PRODUCTION', default = None):
+    django_heroku.settings(locals())

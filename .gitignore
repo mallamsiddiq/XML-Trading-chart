@@ -2,6 +2,7 @@
 *.pyo
 app.db
 .env
+/staticfiles
 frontend/node_modules/
 frontend/public/
 frontend/src/
@@ -15,11 +16,9 @@ newenv\
 newenv
 testenv\
 testenv
-db.json
 .vscode\
 .vscode
 **/*.db
-db.json
 spinup.py
 .coverage
 __pycache__/

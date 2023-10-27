@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Run commands inside the running "web" container
-docker exec -it web python manage.py flush
-docker exec -it web python manage.py makeadmin
-docker exec -it web python manage.py seed_traders
-docker exec -it web python manage.py simulate_profit_loss
+
+docker-compose run web python manage.py migrate
+docker-compose run web python manage.py flush
+docker-compose run web python manage.py makeadmin
+docker-compose run web python manage.py seed_traders
+docker-compose run web python manage.py simulate_profit_loss

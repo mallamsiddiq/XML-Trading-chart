@@ -1,40 +1,12 @@
 #!/bin/bash
+# This is your entrypoint script
+# Run Gunicorn in the background
+gunicorn core.wsgi:application --bind 0.0.0.0:$PORT &
 
-# Check if Docker is running
+# Add a sleep to wait for Gunicorn to start (adjust the duration as needed)
+sleep 5
 
-# Create a flag file to check if the initial setup has been completed
-INITIAL_SETUP_FLAG_FILE=".initial_setup_completed"
-
-# Check if the flag file exists
-if [ ! -f "$INITIAL_SETUP_FLAG_FILE" ]; then
-  echo "Initial setup has not been completed yet. Starting the setup..."
-
-  # Build the Docker containers (if not already built)
-  docker-compose build
-
-  # Start the Docker containers in detached mode
-  docker-compose up -d
-
-  # Wait for the Django app to be ready (you can customize this part)
-  until docker-compose exec web python -c "import requests; assert requests.get('http://web:8000/home').status_code == 200"
-  do
-    echo "Waiting for the Django app to start..."
-    sleep 5
-  done
-
-  # Run initial setup tasks
-  docker-compose exec web python manage.py migrate
-  docker-compose exec web python manage.py makeadmin
-  docker-compose exec web python manage.py seed_traders
-
-  # Create the flag file to indicate that the initial setup is complete
-  touch "$INITIAL_SETUP_FLAG_FILE"
-
-  echo "Initial setup completed."
-
-else
-  # The initial setup has already been completed, so just start the containers
-  docker-compose up -d
-
-  echo "Django app is up and running at http://localhost:8000"
-fi
+# Run your additional commands here
+python manage.py makemigrations
+python manage.py migrate
+python manage.py loaddata db.json
