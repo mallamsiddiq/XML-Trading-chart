@@ -4,25 +4,30 @@
 ## 🚀 Project Objective:
 Our primary goal with this project is to develop a web-based dashboard application that caters to the needs of a startup in the finance sector. This startup has generously provided 10 stock traders with an initial capital of $100 each. Our project's central mission is to create a user-friendly platform that empowers both the traders and administrators to comprehensively monitor trading performance over time.
 
+the app is live and publicly accessible on the endpoint:
+
+[https://ft9ja-akinyemi-trading.onrender.com/](https://ft9ja-akinyemi-trading.onrender.com/)
+
 ## 📊 User Interaction and Navigation:
 
 1. **Homepage (`/home/`):**
    - Traders and administrators can access the homepage to obtain an overview of all the traders.
    - A well-structured table provides detailed information about each trader, enhancing visibility and transparency.
+   - On the table, the traders' account balance column is accessible to only admin users
 
 2. **Login (`/login/`):**
    - We offer a straightforward login page, ensuring a smooth and secure entry into the system.
 
-3. **Trader Dashboard:**
-   - For administrators, an additional feature is accessible. They can click on a trader's name in the homepage table to access that trader's personalized dashboard.
+3. **Trader Dashboard (`/dashboard/<user-id>`):**
+   - For administrators, an additional feature is accessible. They can click on a trader's name in the homepage table to access that trader's personalized dashboard. 
 
-4. **Non-Admin Dashboard:**
+4. **Non-Admin Dashboard (`/dashboard`):**
    - For traders who are not administrators, a dedicated dashboard is readily available. This can be reached by simply clicking on 'dashboard' in the navigation bar, providing a seamless user experience.
 
 5. **Loging in**
    - All users automatically created have same password which is : 'password' i.e one user is email=trader1@gmail.com, password = 'password',
 
-   - And an admin usewr is automatically created i.e (email = 'admin@ftnja.com', password = 'admin')
+   - And an admin user has been automatically created as well, i.e (email = 'admin@ftnja.com', password = 'admin')
    please note: username has been replaced with email throughout this app
    
 
