@@ -36,11 +36,24 @@ class TraderDasboardViewTest(TestCase):
         self.client.login(email='trader', password='traderpass')
         response = self.client.get(reverse('chart', args=[self.trader2.pk]))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('dashboard'))
+        self.assertRedirects(response, reverse('home'))
+        # self.assertRedirects(response, reverse('home') + '?next=/dashboard')
 
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)  # Expecting one message
 
         # Extract and check the message content
         message = messages[0]
-        self.assertEqual(str(message), "Only your Dashboard is accesible to you")
+        self.assertEqual(str(message), "You can't view other's transactions")
+
+    def test_must_login(self):
+        response = self.client.get(reverse('chart', args=[self.trader2.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login') + f'?next=/dashboard/{self.trader2.pk}/')
+
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)  # Expecting one message
+
+        # Extract and check the message content
+        message = messages[0]
+        self.assertEqual(str(message), "Please log in")
