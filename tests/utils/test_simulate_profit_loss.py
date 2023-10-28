@@ -19,7 +19,7 @@ class SimulateTransactionsCommandTestCase(TestCase):
         trader2_early_balance = self.trader2.balance
 
         num_transactions = 5  # Provide the desired value for num_transactions (optional)
-        delay = 1
+        delay = 15
 
         call_command('simulate_profit_loss', f'--num_transactions={num_transactions}', f'--delay={delay}')
 

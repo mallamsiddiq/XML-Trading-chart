@@ -2,8 +2,11 @@ import random
 from django.core.management.base import BaseCommand
 from authapp.models import Trader
 from traders.models import Credit, Debit
+from django.db import transaction as atomic_transaction
 from django.contrib.auth import get_user_model
 import time
+
+import threading
 
 User = get_user_model()
 
@@ -11,6 +14,8 @@ def make_transaction(**kwargs):
     if kwargs['amount'] < 0:
         return Debit(**kwargs)
     return Credit(**kwargs)
+
+database_lock = threading.Lock()
 
 class Command(BaseCommand):
     help = 'Simulate profit and loss for traders'
@@ -35,23 +40,34 @@ class Command(BaseCommand):
 
         transaction_amount = 15  # Maximum transaction amount range for each minute
 
-        for trader in traders:
+        def simulate_trade(curr_trader):
+            
             for minute in range(1, num_transactions + 1):
                 # Generate a random transaction amount within the range [-transaction_amount, transaction_amount]
-                transaction_amount = random.uniform(-transaction_amount, transaction_amount)
+                rand_amount = random.uniform(-transaction_amount, transaction_amount)
 
                 # Create a new transaction record for this trader
-                transaction = make_transaction(customer=trader, 
+                while True:
+                    try:
+                        with atomic_transaction.atomic():
+                            transaction = make_transaction(customer=curr_trader, 
                                           description = '', 
-                                          amount = transaction_amount)
-                transaction.description = f"{transaction.__class__.__name__} of {transaction_amount} @ {minute} Minute"
-                self.stdout.write(self.style.ERROR(f' {transaction.customer}'))
-
-                self.stdout.write(self.style.MIGRATE_HEADING(f'{transaction.customer}  ----->>>>ss'))
-                transaction.save()
-                self.stdout.write(self.style.MIGRATE_HEADING(f'{transaction.description}  ----->>>>{transaction.customer.balance}'))
-
+                                          amount = rand_amount)
+                            transaction.description = f"{transaction.__class__.__name__} of {rand_amount} @ {minute} Minute"
+                            self.stdout.write(self.style.WARNING(f' {transaction.customer}'))
+                            with database_lock:
+                                transaction.save()
+                            self.stdout.write(self.style.MIGRATE_HEADING(f'{transaction.description}  ----->>>>{transaction.customer.balance}'))
+                            
+                        break  # If the transaction is successful, break the loop
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f'Error while saving transaction: {curr_trader}{e}'))
+                        time.sleep(5)
                 time.sleep(delay)
-                
+            self.stdout.write(self.style.SUCCESS(f'Simulated profit/loss for trader {curr_trader}'))
 
-            self.stdout.write(self.style.SUCCESS(f'Simulated profit/loss for trader {trader}'))
+        threads = [threading.Thread(target=simulate_trade, args=(trader,)) for trader in traders ]
+
+        [thrd.start() for thrd in threads]
+
+        [thrd.join() for thrd in threads]
