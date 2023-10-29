@@ -57,17 +57,44 @@ class DashboardBase:
         if end:
             transactions = transactions.filter(created_date__lte=end)
 
-        timestamps = [date_filter(transaction.created_date, "c") for transaction in transactions]
-        profit_loss = [transaction.balance for transaction in transactions]
-        prev_balance = [(transaction.balance - transaction.amount, transaction.balance)[transaction.amount < 0 and transaction.balance - transaction.amount > 0] for transaction in transactions]
-        bar_data = [(transaction.amount, abs(transaction.amount))[(transaction.balance - transaction.amount) > 0] for transaction in transactions]
+        # timestamps = [date_filter(transaction.created_date, "c") for transaction in transactions]
+        # balance = [transaction.balance for transaction in transactions]
+        # credit_trans = [(0, transaction.amount)[transaction.amount >= 0] for transaction in transactions ]
+        # debit_trans = [(0, transaction.amount)[transaction.amount < 0] for transaction in transactions ]
 
+        timestamps = []
+        balance = []
+        credit_trans = []
+        debit_trans = []
+        balance_bars = []
+        
+        for transaction in transactions:
+
+            timestamps.append(date_filter(transaction.created_date, "c"))
+
+            balance.append(transaction.balance)
+            
+            credit_trans.append((0, transaction.amount)[transaction.type == 'Credit'])
+            debit_trans.append((0, transaction.amount)[transaction.type == 'Debit'])
+
+            if (transaction.amount >= 0 and transaction.balance - transaction.amount >= 0) or\
+                (transaction.amount < 0 and transaction.balance - transaction.amount <= 0):
+                balance_bars.append(transaction.balance - transaction.amount)
+
+            elif transaction.balance - transaction.amount >= 0 and transaction.balance <=0 or \
+                transaction.balance - transaction.amount < 0 and transaction.balance >=0:
+                balance_bars.append(0)
+            else:
+                balance_bars.append(transaction.balance)
+         
         context.update({
-            'data_labels': json.dumps(timestamps),
-            'data_values': profit_loss,
-            'bar_data': bar_data,
-            'prev_balance': prev_balance,
+            'time_stamps': json.dumps(timestamps),
+            'curr_balance': balance,
+            'credits': credit_trans,
+            'debits': debit_trans,
             'transactions': transactions,
+            
+            'balance_bars': balance_bars,
             'dateform': DateForm,
         })
 

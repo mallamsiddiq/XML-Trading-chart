@@ -9,38 +9,42 @@ document.addEventListener('DOMContentLoaded', function () {
   var mixedChart = new Chart(ctx, {
       type: 'bar',
       data: {
-          labels: labels,
+          labels: timeStamp,
           datasets: [
             {
                 label: 'Balance Track',
-                data: profits_losses,
+                data: currBalance,
                 type: 'line', // Use a line chart for this dataset
-                backgroundColor: "rgba(87, 121, 234, 0.6)",
-                borderColor: "rgba(87, 121, 234, 0.6)",
-                
-                borderWidth: 3,
+                backgroundColor: "#EEE8AA",
+                borderColor: "#EEE8AA",
+                borderWidth: 4,
                 tension: 0.5,
                 fill: false
             },
             {
-                label: 'Current Balance',
-                data: PrevBalance,
+                label: 'Balance Bars',
+                data: balanceBars,
                 type: 'bar', // Use a bar chart for this dataset
-                
-                
-
-                backgroundColor: "rgba(18, 200, 150, 0.6)",
-                borderColor: "rgba(18, 200, 150, 0.6)",
+                backgroundColor: "rgba(87, 121, 234, 0.6)",
+                borderColor: "rgba(87, 121, 234, 0.6)",
                 stack: 'stack'
             },
             {
-              label: 'Profit/Loss',
-              data: barData,
+              label: 'Credit Transactions',
+              data: Credits,
+              type: 'bar', // Use a bar chart for this dataset
+              backgroundColor: "rgba(18, 200, 150, 0.6)",
+              borderColor: "rgba(18, 200, 150, 0.6)",
+              stack: 'stack'
+            },
+            {
+              label: 'Debit Transaction',
+              data: Debits,
               type: 'bar', // Use a bar chart for this dataset
               backgroundColor: "rgba(234, 87, 102, 0.6)",
               borderColor: "rgba(234, 87, 102, 0.6)",
               stack: 'stack'
-          },
+            },
             
         ],
       },
@@ -55,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
               displayFormats: {
                 minute: 'HH:mm',
               },
-              min: labels[0],  // Set the minimum timestamp from your data
-              max: labels[labels.length - 1]
+              min: timeStamp[0],  // Set the minimum timestamp from  data
+              max: timeStamp[timeStamp.length - 1]
             },
             grid: {
               offset: true
