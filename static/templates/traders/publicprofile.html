@@ -44,11 +44,11 @@
 
 {% block otherscripts %}
 <script>
-    let labels = JSON.parse('{{ data_labels|escapejs|safe }}');  
+    let timeStamp = JSON.parse('{{ time_stamps|escapejs|safe }}');  
     // Ensure |safe filter is used to prevent escaping
 
     
-    labels = labels.map(function (timestamp) {
+    timeStamp = timeStamp.map(function (timestamp) {
         return new Date(timestamp);
 
         var date = new Date(timestamp);
@@ -56,15 +56,14 @@
     // Format the Date object using Moment.js
     return moment(date).format('YYYY-MM-DD HH:mm:ss');
     });
-    console.log(labels)
+    // console.log(timeStamp)
     // prev_balance
 
-    //var labels = JSON.parse(JSON.stringify({{ data_labels|safe }}));
-    var profits_losses = {{ data_values|safe }};
-    var barData = ({{bar_data|safe }});
-    
-    var PrevBalance = ({{prev_balance|safe }});
-    console.log(PrevBalance)
+    //var timeStamp = JSON.parse(JSON.stringify({{ data_timeStamp|safe }}));
+    var currBalance = {{ curr_balance|safe }};
+    var Credits = ({{credits|safe }});
+    var Debits = ({{debits|safe }});
+    var balanceBars = ({{balance_bars|safe }});
 </script>
 
 <script type="text/JavaScript"  src = "{% static 'js/plotchart.js' %}" ></script>

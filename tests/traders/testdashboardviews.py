@@ -1,11 +1,12 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from traders.models import Transaction  # Import your Trader model
+from traders.models import Transaction, Credit, Debit  # Import your Trader model
 from authapp.models import Trader
 from django.contrib.messages import get_messages
 from datetime import datetime
 from decimal import Decimal
+import random
 
 import json
 
@@ -89,25 +90,24 @@ class DashboardViewTest(TestCase):
         for transaction in transactions:
             self.assertTrue(start_date <= transaction.created_date <= end_date)
 
-    def test_dashboard_view_data_lists(self):
+    def test_dashboard_view_data_payload(self):
         # Log in the user
         self.client.login(email='testuser', password='testpassword')
 
         # Create transactions with different data
-        transactions = []
         for idx in range(10):
-            date = datetime(2023, 1, 1)
-            amount = Decimal('10.00') * (idx % 5)
-            balance = Decimal('1000.00') + amount * (idx % 2)
-            transaction = Transaction(
+            rand_amount = random.uniform(-25, 25)
+            trsnct_obj = (Credit, Debit)[rand_amount < 0]
+            transaction = trsnct_obj(
                 customer=self.trader,
-                description=f"some {idx} transaction",
-                amount=amount,
-                created_date=date,
-                balance=balance
+                description=f"some {trsnct_obj.__name__} transaction {idx}",
+                amount=rand_amount,
             )
             transaction.save()
-            transactions.append(transaction)
+
+        transactions = Transaction.objects.all()
+        
+        self.assertEqual(transactions.count(), 10)
 
         # Access the view
         response = self.client.get(reverse('dashboard'))
@@ -116,24 +116,35 @@ class DashboardViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Get the lists from the context
-        timestamps = timestamps = json.loads(response.context['data_labels'])
-        profit_loss = response.context['data_values']
-        prev_balance = response.context['prev_balance']
-        bar_data = response.context['bar_data']
+        timestamps = timestamps = json.loads(response.context['time_stamps'])
+        curr_balance = response.context['curr_balance']
+        credits = response.context['credits']
+        debits = response.context['debits']
+        balance_bars = response.context['balance_bars']
 
         # Check if the generated lists match the expected values
         expected_timestamps = [date_filter(transaction.created_date, "c") for transaction in transactions]
-        expected_profit_loss = [transaction.balance for transaction in transactions]
-        expected_prev_balance = [
-            (transaction.balance - transaction.amount, transaction.balance)[transaction.amount < 0 and transaction.balance - transaction.amount > 0]
-            for transaction in transactions
-        ]
-        expected_bar_data = [(
-            transaction.amount,
-            abs(transaction.amount)
-        )[(transaction.balance - transaction.amount) > 0] for transaction in transactions]
+        expected_curr_balance = [transaction.balance for transaction in transactions]
+        expected_credits = [(0, transaction.amount)[transaction.amount >= 0] for transaction in transactions]
+        expected_debits = [(0, transaction.amount)[transaction.amount < 0] for transaction in transactions]
+
+
+        expected_balance_bars = []
+
+        for transaction in transactions:
+
+            if (transaction.amount >= 0 and transaction.balance - transaction.amount >= 0) or\
+                (transaction.amount < 0 and transaction.balance - transaction.amount <= 0):
+                expected_balance_bars.append(transaction.balance - transaction.amount)
+
+            elif transaction.balance - transaction.amount >= 0 and transaction.balance <=0 or \
+                transaction.balance - transaction.amount < 0 and transaction.balance >=0:
+                expected_balance_bars.append(0)
+            else:
+                expected_balance_bars.append(transaction.balance)
 
         self.assertEqual(timestamps, expected_timestamps)
-        self.assertEqual(profit_loss, expected_profit_loss)
-        self.assertEqual(prev_balance, expected_prev_balance)
-        self.assertEqual(bar_data, expected_bar_data)
+        self.assertEqual(curr_balance, expected_curr_balance)
+        self.assertEqual(credits, expected_credits)
+        self.assertEqual(debits, expected_debits)
+        self.assertEqual(balance_bars, expected_balance_bars)
