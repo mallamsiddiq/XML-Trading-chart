@@ -129,7 +129,7 @@ if config('MONGODB_URL', default = None):
 
 DATABASE_URL = config('DATABASE_URL', default = None)
 
-db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age = 500, ssl_require=True)
+db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age = 500)
 DATABASES['default'].update(db_from_env)   
 
 # Password validation
